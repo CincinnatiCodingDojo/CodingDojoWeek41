@@ -17,13 +17,28 @@
 	)
 
 (fact "test valid next word"
-	(let [words (generate-next-words "bart")]
+	(let [words (generate-next-words "bart" [])]
 		words => (contains "cart")
 		words => (contains "bert")
 		words => (contains "barn")
 		words =not=> (contains "bart")
 		words =not=> (contains "eark")))
+
 (fact "can return only valid words from the word list"
-	(let [next-words (generate-next-words "bart")]
+	(let [next-words (generate-next-words "bart" [])]
 		(filter-words-in-list next-words #{"bart" "bait"}) => (contains "bait")
-		))
+		(filter-words-in-list next-words #{"bart" "beat"}) =not=> (contains "beat")
+		(filter-words-in-list next-words #{"bart" "barf"}) =not=> (contains "bact")
+	))
+
+(fact "a valid new word can not be one of the words we'''''''ve already generated"
+	(generate-next-words "bart" ["bart" "bait"]) =not=> (contains "bait")
+	)
+
+(fact "when start-word and end-word are the same then returs start-word"
+	(solve "a" "a") => ["a"]
+	)
+
+(fact "returns list with correct words"
+	(solve "at" "it") => ["at" "it"])
+
